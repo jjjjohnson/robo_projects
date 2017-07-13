@@ -1,0 +1,2 @@
+project1_solution:two_int_talker
+-DCATKIN_DEVEL_PREFIX=/home/robond/mooc_robotics/Proj1/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/robond/mooc_robotics/Proj1/catkin_ws/install -G Unix Makefiles
