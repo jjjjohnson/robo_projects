@@ -126,8 +126,62 @@ class ForwardKinematics(object):
         all_transforms = tf.msg.tfMessage()
         # We start with the identity
         T = tf.transformations.identity_matrix()
+
+        T0_1 = tf.transformations.concatenate_matrices(
+                tf.transformations.translation_matrix((0,0,0.2)),
+                tf.transformations.quaternion_matrix(
+                tf.transformations.quaternion_about_axis(0,(0,0,1))))
+
+        for name, value in zip(joint_values.name, joint_values.position):
+
+            if name =='lwr_arm_0_joint':
+                T1_2 = tf.transformations.concatenate_matrices(
+                    tf.transformations.translation_matrix((0,0,0.11)),
+                    tf.transformations.quaternion_matrix(
+                    tf.transformations.quaternion_about_axis(value,(0,0,1))))
+            if name == "lwr_arm_1_joint":
+                T2_3 = tf.transformations.concatenate_matrices(
+                    tf.transformations.translation_matrix((0,0,0.2005)),
+                    tf.transformations.quaternion_matrix(
+                    tf.transformations.quaternion_about_axis(value,(0,1,0))))
+            if name == "lwr_arm_2_joint":
+                T3_4 = tf.transformations.concatenate_matrices(
+                    tf.transformations.translation_matrix((0,0,0.2)),
+                    tf.transformations.quaternion_matrix(
+                    tf.transformations.quaternion_about_axis(value,(0,0,1))))
+            if name == "lwr_arm_3_joint":
+                T4_5 = tf.transformations.concatenate_matrices(
+                    tf.transformations.translation_matrix((0,0,0.2)),
+                    tf.transformations.quaternion_matrix(
+                    tf.transformations.quaternion_about_axis(value,(0,-1,0))))
+            if name == "lwr_arm_4_joint":
+                T5_6 = tf.transformations.concatenate_matrices(
+                    tf.transformations.translation_matrix((0,0,0.2)),
+                    tf.transformations.quaternion_matrix(
+                    tf.transformations.quaternion_about_axis(value,(0,0,1))))
+            if name == "lwr_arm_5_joint":
+                T6_7 = tf.transformations.concatenate_matrices(
+                    tf.transformations.translation_matrix((0,0,0.19)),
+                    tf.transformations.quaternion_matrix(
+                    tf.transformations.quaternion_about_axis(value,(0,1,0))))
+            if name == "lwr_arm_6_joint":
+                T7_8 = tf.transformations.concatenate_matrices(
+                    tf.transformations.translation_matrix((0,0,0.078)),
+                    tf.transformations.quaternion_matrix(
+                    tf.transformations.quaternion_about_axis(value,(0,0,1))))
+
+        T0_2 = T0_1.dot(T1_2)
+        T0_3 = T0_2.dot(T2_3)
+        T0_4 = T0_3.dot(T3_4)
+        T0_5 = T0_4.dot(T4_5)
+        T0_6 = T0_5.dot(T5_6)
+        T0_7 = T0_6.dot(T6_7)
+        T0_8 = T0_7.dot(T7_8)
         
-        # YOUR CODE GOES HERE
+        T_lists = [T0_1, T0_2, T0_3, T0_4, T0_5, T0_6, T0_7, T0_8]
+        for T, link_name in zip(T_lists, link_names):
+            all_transforms.transforms.append(convert_to_message(T, link_name, 'world_link'))
+
         
         return all_transforms
        
